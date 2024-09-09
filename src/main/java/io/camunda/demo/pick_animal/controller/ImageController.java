@@ -5,14 +5,23 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
 
+import io.camunda.demo.pick_animal.db.UserchoiceNotFoundException;
 import io.camunda.demo.pick_animal.db.UserchoiceRepository;
 import io.camunda.demo.pick_animal.service.utils.MediaTypeExtractor;
 
 import java.util.Base64;
+
+// Custom Exception
+// class ResourceNotFoundException extends RuntimeException {
+//     public ResourceNotFoundException(String message) {
+//         super(message);
+//     }
+// }
 
 @RestController
 public class ImageController {
@@ -40,5 +49,11 @@ public class ImageController {
             // Return 404 if the image is not found
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
+    }
+
+    // Exception Handler for ResourceNotFoundException
+    @ExceptionHandler(UserchoiceNotFoundException.class)
+    public ResponseEntity<String> handleResourceNotFoundException(UserchoiceNotFoundException ex) {
+        return new ResponseEntity<>(ex.getMessage(), HttpStatus.NOT_FOUND);
     }
 }
