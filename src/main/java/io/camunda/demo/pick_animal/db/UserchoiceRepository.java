@@ -47,7 +47,6 @@ public class UserchoiceRepository {
         if (isSuccess == true) {
             LOG.info("User record saved with id: {}", userChoice.id());
         } else {
-            final String msg = "";
             LOG.error("Failed to insert user choice: {} to db", userChoice);
         }
         return isSuccess;
