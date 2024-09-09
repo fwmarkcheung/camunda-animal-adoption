@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.AutoConfigureOrder;
 import org.springframework.boot.test.context.SpringBootTest;
 
+import io.camunda.demo.pick_animal.db.UserchoiceNotFoundException;
 import io.camunda.demo.pick_animal.db.UserchoiceRepository;
 import io.camunda.demo.pick_animal.model.Userchoice;
 import java.text.SimpleDateFormat;

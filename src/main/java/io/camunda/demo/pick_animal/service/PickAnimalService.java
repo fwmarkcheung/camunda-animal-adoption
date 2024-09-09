@@ -20,6 +20,7 @@ import org.springframework.web.client.RestClient;
 import com.google.common.reflect.TypeToken;
 import java.lang.reflect.Type;
 
+import io.camunda.demo.pick_animal.db.UserchoiceNotFoundException;
 import io.camunda.demo.pick_animal.db.UserchoiceRepository;
 import io.camunda.demo.pick_animal.model.Userchoice;
 import io.camunda.zeebe.spring.client.annotation.JobWorker;

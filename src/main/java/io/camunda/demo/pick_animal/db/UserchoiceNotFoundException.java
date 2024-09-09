@@ -1,4 +1,4 @@
-package io.camunda.demo.pick_animal.service;
+package io.camunda.demo.pick_animal.db;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ResponseStatus;

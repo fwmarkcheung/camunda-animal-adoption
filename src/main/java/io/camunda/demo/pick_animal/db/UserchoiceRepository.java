@@ -10,6 +10,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
+import java.util.NoSuchElementException;
+
 import org.javatuples.Pair;
 
 @Service
@@ -57,6 +59,16 @@ public class UserchoiceRepository {
     public Pair<String, String> getBase64ImageStrFromHarperDB(String recordId) {
 
         Optional<Userchoice> userchoice = findUserchoiceById(recordId);
-        return new Pair<String, String>(userchoice.get().imageType(), userchoice.get().imageBase64String());
+        Pair<String, String> pair;
+
+        try {
+            Userchoice record = userchoice.get();
+            pair = new Pair<String, String>(record.imageType(),
+                    record.imageBase64String());
+            return pair;
+
+        } catch (NoSuchElementException e) {
+            throw new UserchoiceNotFoundException(recordId);
+        }
     }
 }
