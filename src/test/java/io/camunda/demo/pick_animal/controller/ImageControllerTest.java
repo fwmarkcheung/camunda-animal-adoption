@@ -2,7 +2,6 @@ package io.camunda.demo.pick_animal.controller;
 
 import io.camunda.demo.pick_animal.db.UserchoiceNotFoundException;
 import io.camunda.demo.pick_animal.db.UserchoiceRepository;
-import io.camunda.demo.pick_animal.service.utils.MediaTypeExtractor;
 import org.javatuples.Pair;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -12,8 +11,6 @@ import org.mockito.MockitoAnnotations;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.server.ResponseStatusException;
-
 import java.util.Base64;
 
 import static org.junit.jupiter.api.Assertions.*;
