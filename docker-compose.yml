@@ -14,3 +14,22 @@ services:
     ports:
       - $HDB_ADMIN_LOCAL_PORT:$HDB_ADMIN_DOCKER_PORT
       - $HDB_USER_LOCAL_PORT:$HDB_USER_DOCKER_PORT
+  web:
+    # Path to dockerfile.
+    # '.' represents the current directory in which
+    # docker-compose.yml is present.
+    build: .
+
+    # Make sure the DB is started before satrting web app
+    depends_on:
+      database:
+        #condition: service_completed_successfully
+        condition: service_started
+        restart: true
+
+    # Mapping of container port to host
+    ports:
+      - $SPRING_LOCAL_PORT:$SPRING_DOCKER_PORT
+
+    environment:
+      SPRING_APPLICATION_JSON: '{ "harperDB.uri"  : "http://database:$HDB_USER_LOCAL_PORT", "harperDB.username" : "$HDB_USER", "harperDB.password" : "$HDB_PASSWORD"}'
