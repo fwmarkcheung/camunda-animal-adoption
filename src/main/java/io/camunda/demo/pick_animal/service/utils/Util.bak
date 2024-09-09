@@ -1,0 +1,22 @@
+package io.camunda.demo.pick_animal.service.utils;
+
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
+
+public class Util {
+
+    private final static SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd-HH-mm-ssZ");
+
+    public static String createUserId(String username) {
+        StringBuffer userChoiceIdStringBuffer = new StringBuffer(username);
+        userChoiceIdStringBuffer.append('-');
+
+        Date now = Calendar.getInstance().getTime();
+        userChoiceIdStringBuffer.append(simpleDateFormat.format(now));
+
+        return userChoiceIdStringBuffer.toString();
+
+    }
+
+}
