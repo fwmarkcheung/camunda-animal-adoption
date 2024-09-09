@@ -23,13 +23,12 @@ services:
 
     # Make sure the DB is started before satrting web app
     depends_on:
-      - database
-      # database:
-      #   condition: service_completed_successfully
-      #   restart: true
+      database:
+        #condition: service_completed_successfully
+        condition: service_started
+        restart: true
 
-      # Mapping of container port to host
-
+    # Mapping of container port to host
     ports:
       - $SPRING_LOCAL_PORT:$SPRING_DOCKER_PORT
 
