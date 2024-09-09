@@ -16,13 +16,6 @@ import io.camunda.demo.pick_animal.service.utils.MediaTypeExtractor;
 
 import java.util.Base64;
 
-// Custom Exception
-// class ResourceNotFoundException extends RuntimeException {
-//     public ResourceNotFoundException(String message) {
-//         super(message);
-//     }
-// }
-
 @RestController
 public class ImageController {
 
