@@ -12,7 +12,7 @@ The Web app and the DB were packaged using docker-compose and run as containers 
 See the diagram (camundaPetAdoptionApp.pdf)
 
 
-# Deployment and running the application as container
+# Deploying and running the application as container
 
 **To deploy and start the containers:**
 
@@ -47,6 +47,11 @@ User can retrieve the pet photo using the ID
     e.g.
     
     http://localhost:8080/userchoice/Mark-2024-09-06-18-59-16-0400
+
+# Run Test cases
+**To run test cases, execute the following command:**
+
+    mvn clean verify
 
 # Debug tips
     // Return the definitions of all databases and tables within the database.
