@@ -2,7 +2,6 @@
 
 # Create an image labelled "build"
 # and use it to run Maven and build the fat jar, then unpack it.
-#FROM openjdk:8-jdk-alpine AS build
 FROM openjdk:17-jdk-alpine AS build
 WORKDIR /workspace/app
 
