@@ -9,7 +9,7 @@
 
 The Web app and the DB were packaged using docker-compose and run as containers in the docker desktop.
 
-See the diagram (camundaPetAdoptionApp.pdf)
+See the diagram ![Pet Adoption App Highlevel Architecture](camundaPetAdoptionApp.pdf)
 
 
 # Deploying and running the application as container
@@ -18,15 +18,15 @@ See the diagram (camundaPetAdoptionApp.pdf)
 
 1. Ensure the Camunda cluster is created and running healthy
 2. Start the Docker Desktop
-3. Run docker-compose up
+3. Run docker-compose up -d
 
-Once the web app is started, it will deploy the process model (stored in the file: ***src/resources/pick-an-animal.bpmn***) to the Camunda cluster (connection properties were configured in the application.properties) and start a process instance automatically.  
+Once the web app is started, it will deploy the process model [pick-an-animal.bpmn](src/resources/pick-an-animal.bpmn)  to the Camunda cluster (connection properties were configured in the application.properties) and start a process instance automatically.  
 
 The process id is printed out in the app console.
 
 A user can then assign the process to him/herself and select a pet to adopt.  The application will make an API call to get a random photo of the pet selected and store the selection as a record to the DB.
 
-The record id is returned to the process as shown in attached screenshot: ***screenShotShowingUserRecord.jpg***
+The record id is returned to the process as shown in attached [screenshot]: (screenShotShowingUserRecord.jpg)
 
 User can retrieve the pet photo using the ID
 
