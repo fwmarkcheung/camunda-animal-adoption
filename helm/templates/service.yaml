@@ -1,0 +1,29 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ .Release.Name }}-database
+spec:
+  type: ClusterIP
+  ports:
+    - name: admin
+      port: {{ .Values.database.ports.adminDockerPort }}
+      targetPort: {{ .Values.database.ports.adminDockerPort }}
+    - name: user
+      port: {{ .Values.database.ports.userDockerPort }}
+      targetPort: {{ .Values.database.ports.userDockerPort }}
+  selector:
+    app: {{ .Release.Name }}-database
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ .Release.Name }}-web
+spec:
+  type: ClusterIP
+  ports:
+    - name: http
+      port: {{ .Values.web.ports.dockerPort }}
+      targetPort: {{ .Values.web.ports.dockerPort }}
+  selector:
+    app: {{ .Release.Name }}-web

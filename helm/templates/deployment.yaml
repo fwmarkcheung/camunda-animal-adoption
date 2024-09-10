@@ -1,0 +1,51 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Release.Name }}-database
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: {{ .Release.Name }}-database
+  template:
+    metadata:
+      labels:
+        app: {{ .Release.Name }}-database
+    spec:
+      containers:
+        - name: database
+          image: {{ .Values.database.image }}
+          ports:
+            - containerPort: {{ .Values.database.ports.adminDockerPort }}
+            - containerPort: {{ .Values.database.ports.userDockerPort }}
+          env:
+            - name: HDB_ADMIN_USERNAME
+              value: {{ .Values.database.username }}
+            - name: HDB_ADMIN_PASSWORD
+              value: {{ .Values.database.password }}
+            - name: HTTP_THREADS
+              value: "{{ .Values.database.httpThreads }}"
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Release.Name }}-web
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: {{ .Release.Name }}-web
+  template:
+    metadata:
+      labels:
+        app: {{ .Release.Name }}-web
+    spec:
+      containers:
+        - name: web
+          image: {{ .Values.web.image.repository }}:{{ .Values.web.image.tag }}
+          ports:
+            - containerPort: {{ .Values.web.ports.dockerPort }}
+          env:
+            - name: SPRING_APPLICATION_JSON
+              value: '{{ .Values.web.environment.harperDB | toJson }}'

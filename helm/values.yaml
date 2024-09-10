@@ -1,0 +1,24 @@
+# Default values for the Helm chart
+database:
+  image: harperdb/harperdb
+  username: root
+  password: password
+  httpThreads: 4
+  ports:
+    adminLocalPort: 9925
+    adminDockerPort: 9925
+    userLocalPort: 9926
+    userDockerPort: 9926
+
+web:
+  image:
+    repository: my-web-app
+    tag: latest
+  ports:
+    localPort: 8080
+    dockerPort: 8080
+  environment:
+    harperDB:
+      uri: "http://database:9926"
+      username: root
+      password: password

@@ -1,4 +1,4 @@
-package io.camunda.demo.animal_picture.zeebe.process;
+package io.camunda.demo.pick_animal.zeebe.process;
 
 import static java.util.Collections.singletonMap;
 
@@ -29,50 +29,55 @@ public class PickAnimalProcessTest {
     private static final String MAKE_CHANGES = "makeChanges";
     private static final String MERGE_CODE = "mergeCode";
     private static final String DEPLOY_SNAPSHOT = "deploySnapshot";
-/*
-    // injected by ZeebeProcessTest annotation
-    private ZeebeTestEngine engine;
-    // injected by ZeebeProcessTest annotation
-    private ZeebeClient client;
 
-    @BeforeEach
-    void deployProcesses() {
-        // The embedded engine is completely reset before each test run.
-
-        // Therefore, we need to deploy the process each time
-        final DeploymentEvent deploymentEvent = deployResources(PULL_REQUEST_PROCESS_RESOURCE_NAME,
-                AUTOMATED_TESTS_PROCESS_RESOURCE_NAME);
-
-        BpmnAssert.assertThat(deploymentEvent)
-                .containsProcessesByResourceName(
-                        PULL_REQUEST_PROCESS_RESOURCE_NAME, AUTOMATED_TESTS_PROCESS_RESOURCE_NAME);
-    }
-
-    @Test
-    void testPullRequestCreatedHappyPath() throws InterruptedException, TimeoutException {
-        // Given
-        final String pullRequestId = "123";
-
-        // When
-
-        // -> send message to create process instance
-        final PublishMessageResponse publishMessageResponse = sendMessage(PR_CREATED_MSG, "",
-                singletonMap(PR_ID_VAR, pullRequestId));
-
-        // -> complete user task
-        completeUserTask(REQUEST_REVIEW);
-
-        // -> send another message to drive the process forward
-        sendMessage(REVIEW_RECEIVED_MSG, pullRequestId, singletonMap(REVIEW_RESULT_VAR, "approved"));
-
-        /*
-         * -> on a parallel branch of the process, a sub process is called, which spawns
-         * three service
-         * tasks as part of a multi instance embedded sub process. These lines complete
-         * the called
-         * service tasks
-         */
-        completeServiceTasks(AUTOMATED_TESTS_RUN_TESTS, 3);
+    /*
+     * // injected by ZeebeProcessTest annotation
+     * private ZeebeTestEngine engine;
+     * // injected by ZeebeProcessTest annotation
+     * private ZeebeClient client;
+     * 
+     * @BeforeEach
+     * void deployProcesses() {
+     * // The embedded engine is completely reset before each test run.
+     * 
+     * // Therefore, we need to deploy the process each time
+     * final DeploymentEvent deploymentEvent =
+     * deployResources(PULL_REQUEST_PROCESS_RESOURCE_NAME,
+     * AUTOMATED_TESTS_PROCESS_RESOURCE_NAME);
+     * 
+     * BpmnAssert.assertThat(deploymentEvent)
+     * .containsProcessesByResourceName(
+     * PULL_REQUEST_PROCESS_RESOURCE_NAME, AUTOMATED_TESTS_PROCESS_RESOURCE_NAME);
+     * }
+     * 
+     * @Test
+     * void testPullRequestCreatedHappyPath() throws InterruptedException,
+     * TimeoutException {
+     * // Given
+     * final String pullRequestId = "123";
+     * 
+     * // When
+     * 
+     * // -> send message to create process instance
+     * final PublishMessageResponse publishMessageResponse =
+     * sendMessage(PR_CREATED_MSG, "",
+     * singletonMap(PR_ID_VAR, pullRequestId));
+     * 
+     * // -> complete user task
+     * completeUserTask(REQUEST_REVIEW);
+     * 
+     * // -> send another message to drive the process forward
+     * sendMessage(REVIEW_RECEIVED_MSG, pullRequestId,
+     * singletonMap(REVIEW_RESULT_VAR, "approved"));
+     * 
+     * /*
+     * -> on a parallel branch of the process, a sub process is called, which spawns
+     * three service
+     * tasks as part of a multi instance embedded sub process. These lines complete
+     * the called
+     * service tasks
+     */
+    completeServiceTasks(AUTOMATED_TESTS_RUN_TESTS, 3);
 
         // -> back on the main process, there are two more tasks to complete to reach
         // the end
