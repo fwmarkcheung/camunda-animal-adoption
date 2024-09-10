@@ -1,12 +1,6 @@
 services:
   database:
-
-    # image to fetch from docker hub
     image: harperdb/harperdb
-
-    # Environment variables for startup script
-    # container will use these variables
-    # to start the container with these define variables. 
     environment:
       - "HDB_ADMIN_USERNAME=root"
       - "HDB_ADMIN_PASSWORD=password"
@@ -14,22 +8,23 @@ services:
     ports:
       - $HDB_ADMIN_LOCAL_PORT:$HDB_ADMIN_DOCKER_PORT
       - $HDB_USER_LOCAL_PORT:$HDB_USER_DOCKER_PORT
+    # Can't implement this health check since HarperDB image does not curl
+    # Health check to ensure HarperDB is ready
+    # healthcheck:
+    #   #      test: [ "CMD-SHELL", "curl -f http://localhost:$HDB_USER_DOCKER_PORT/health || exit 1" ]
+    #   test: [ "CMD-SHELL", "curl -f http://database:$HDB_USER_DOCKER_PORT/health || exit 1" ]
+    #   interval: 10s # Check every 10 seconds
+    #   timeout: 5s # Timeout after 5 seconds
+    #   retries: 5 # Retry up to 5 times
+    #   start_period: 30s # Wait for 30 seconds before starting the first check
   web:
-    # Path to dockerfile.
-    # '.' represents the current directory in which
-    # docker-compose.yml is present.
     build: .
-
-    # Make sure the DB is started before satrting web app
+    restart: always
+    # Alternative way to implement health check for DB
+    command: bash -c 'while [[ "$$(curl --connect-timeout 2 -s -o /dev/null -w ''%{http_code}'' $HDB_USER_DOCKER_PORT/health)" != "200" ]]; do echo ..; sleep 5; done; echo database is health'
     depends_on:
-      database:
-        #condition: service_completed_successfully
-        condition: service_started
-        restart: true
-
-    # Mapping of container port to host
+      - database
     ports:
       - $SPRING_LOCAL_PORT:$SPRING_DOCKER_PORT
-
     environment:
       SPRING_APPLICATION_JSON: '{ "harperDB.uri"  : "http://database:$HDB_USER_LOCAL_PORT", "harperDB.username" : "$HDB_USER", "harperDB.password" : "$HDB_PASSWORD"}'
