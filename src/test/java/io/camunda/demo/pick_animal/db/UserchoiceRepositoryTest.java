@@ -10,7 +10,6 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
 import java.util.Date;
-import java.util.NoSuchElementException;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -67,8 +66,6 @@ class UserchoiceRepositoryTest {
         String imageUrl = "http://example.com/image.jpg";
         String imageBase64String = "base64Image";
 
-        Userchoice userchoice = new Userchoice(id, userName, creationDate, animal, "jpg", imageUrl, imageBase64String);
-
         when(template.insert(any(Userchoice.class))).thenReturn(true);
 
         // Act
@@ -83,7 +80,7 @@ class UserchoiceRepositoryTest {
     void testSave_Failure() {
         // Arrange
         String id = "123";
-        String userName = "John";
+        String userName = "Mark";
         Date creationDate = new Date();
         String animal = "Cat";
         String imageUrl = "http://example.com/image.jpg";
