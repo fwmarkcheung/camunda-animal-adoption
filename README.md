@@ -18,8 +18,9 @@ See the diagram ![Pet Adoption App Highlevel Architecture](camundaPetAdoptionApp
 
 1. Ensure the Camunda cluster is created and running healthy
 2. Start the Docker Desktop
-3. Run the web and db as contains using docker-compose
-     docker-compose up -d
+3. Run the web and db as contains using docker-compose:
+
+    	docker-compose up -d
 
 Once the web app is started, it will deploy the process model [pick-an-animal.bpmn](src/main/resources/pick-an-animal.bpmn)  to the Camunda cluster (connection properties were configured in the application.properties) and start a process instance automatically.  
 
