@@ -10,7 +10,9 @@ import org.mockito.MockitoAnnotations;
 import java.util.Date;
 import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.*;
 
 class PickAnimalControllerTest {
@@ -30,7 +32,7 @@ class PickAnimalControllerTest {
     void testFindUserchoiceById_Found() {
         // Arrange
         String id = "123";
-        Userchoice userchoice = new Userchoice(id, "John", new Date(), "Cat", "jpg", "image_url", "base64Image");
+        Userchoice userchoice = new Userchoice(id, "Mark", new Date(), "Cat", "jpg", "image_url", "base64Image");
         when(pickAnimalService.findUserchoiceById(id)).thenReturn(Optional.of(userchoice));
 
         // Act
