@@ -20,7 +20,7 @@ See the diagram ![Pet Adoption App Highlevel Architecture](camundaPetAdoptionApp
 2. Start the Docker Desktop
 3. Run docker-compose up -d
 
-Once the web app is started, it will deploy the process model [pick-an-animal.bpmn](src/resources/pick-an-animal.bpmn)  to the Camunda cluster (connection properties were configured in the application.properties) and start a process instance automatically.  
+Once the web app is started, it will deploy the process model [pick-an-animal.bpmn](src/main/resources/pick-an-animal.bpmn)  to the Camunda cluster (connection properties were configured in the application.properties) and start a process instance automatically.  
 
 The process id is printed out in the app console.
 
