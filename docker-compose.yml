@@ -8,7 +8,7 @@ services:
     ports:
       - $HDB_ADMIN_LOCAL_PORT:$HDB_ADMIN_DOCKER_PORT
       - $HDB_USER_LOCAL_PORT:$HDB_USER_DOCKER_PORT
-    # Can't implement this health check since HarperDB image does not curl
+    # Can't implement this health check since HarperDB image does not have curl installed
     # Health check to ensure HarperDB is ready
     # healthcheck:
     #   #      test: [ "CMD-SHELL", "curl -f http://localhost:$HDB_USER_DOCKER_PORT/health || exit 1" ]
@@ -17,14 +17,14 @@ services:
     #   timeout: 5s # Timeout after 5 seconds
     #   retries: 5 # Retry up to 5 times
     #   start_period: 30s # Wait for 30 seconds before starting the first check
-  web:
-    build: .
-    restart: always
-    # Alternative way to implement health check for DB
-    command: bash -c 'while [[ "$$(curl --connect-timeout 2 -s -o /dev/null -w ''%{http_code}'' $HDB_USER_DOCKER_PORT/health)" != "200" ]]; do echo ..; sleep 5; done; echo database is health'
-    depends_on:
-      - database
-    ports:
-      - $SPRING_LOCAL_PORT:$SPRING_DOCKER_PORT
-    environment:
-      SPRING_APPLICATION_JSON: '{ "harperDB.uri"  : "http://database:$HDB_USER_LOCAL_PORT", "harperDB.username" : "$HDB_USER", "harperDB.password" : "$HDB_PASSWORD"}'
+    web:
+      build: .
+      restart: always
+      # Alternative way to implement health check for DB
+      command: bash -c 'while [[ "$$(curl --connect-timeout 2 -s -o /dev/null -w ''%{http_code}'' $HDB_USER_DOCKER_PORT/health)" != "200" ]]; do echo ..; sleep 5; done; echo database is health'
+      depends_on:
+        - database
+      ports:
+        - $SPRING_LOCAL_PORT:$SPRING_DOCKER_PORT
+      environment:
+        SPRING_APPLICATION_JSON: '{ "harperDB.uri"  : "http://database:$HDB_USER_LOCAL_PORT", "harperDB.username" : "$HDB_USER", "harperDB.password" : "$HDB_PASSWORD"}'
