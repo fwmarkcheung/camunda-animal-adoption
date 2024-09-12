@@ -58,6 +58,10 @@ User can retrieve the pet photo using the ID
     http://localhost:8080/userchoice/Mark-2024-09-06-18-59-16-0400
 
 
+**To shutdown the containers and cleanup images, execute the following commands:**
+
+    docker compose down;docker rmi -f camunda-animal-adoption-web harperdb/harperdb
+
 # Debug tips
     // Return the definitions of all databases and tables within the database.
     curl --location 'http://localhost:9925' \
