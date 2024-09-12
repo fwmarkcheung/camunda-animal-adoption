@@ -17,14 +17,14 @@ services:
     #   timeout: 5s # Timeout after 5 seconds
     #   retries: 5 # Retry up to 5 times
     #   start_period: 30s # Wait for 30 seconds before starting the first check
-    web:
-      build: .
-      restart: always
-      # Alternative way to implement health check for DB
-      command: bash -c 'while [[ "$$(curl --connect-timeout 2 -s -o /dev/null -w ''%{http_code}'' $HDB_USER_DOCKER_PORT/health)" != "200" ]]; do echo ..; sleep 5; done; echo database is health'
-      depends_on:
-        - database
-      ports:
-        - $SPRING_LOCAL_PORT:$SPRING_DOCKER_PORT
-      environment:
-        SPRING_APPLICATION_JSON: '{ "harperDB.uri"  : "http://database:$HDB_USER_LOCAL_PORT", "harperDB.username" : "$HDB_USER", "harperDB.password" : "$HDB_PASSWORD"}'
+  web:
+    build: .
+    restart: always
+    # Alternative way to implement health check for DB
+    command: bash -c 'while [[ "$$(curl --connect-timeout 2 -s -o /dev/null -w ''%{http_code}'' $HDB_USER_DOCKER_PORT/health)" != "200" ]]; do echo ..; sleep 5; done; echo database is health'
+    depends_on:
+      - database
+    ports:
+      - $SPRING_LOCAL_PORT:$SPRING_DOCKER_PORT
+    environment:
+      SPRING_APPLICATION_JSON: '{ "harperDB.uri"  : "http://database:$HDB_USER_LOCAL_PORT", "harperDB.username" : "$HDB_USER", "harperDB.password" : "$HDB_PASSWORD"}'
