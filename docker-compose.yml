@@ -19,7 +19,7 @@ services:
     #   start_period: 30s # Wait for 30 seconds before starting the first check
   web:
     build: .
-    #restart: always
+    restart: always
     # Alternative way to implement health check for DB
     command: bash -c 'while [[ "$$(curl --connect-timeout 2 -s -o /dev/null -w ''%{http_code}'' $HDB_USER_DOCKER_PORT/health)" != "200" ]]; do echo ..; sleep 5; done; echo database is health'
     depends_on:
