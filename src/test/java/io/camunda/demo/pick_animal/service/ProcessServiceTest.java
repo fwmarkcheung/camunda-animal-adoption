@@ -1,56 +1,96 @@
 package io.camunda.demo.pick_animal.service;
 
 import io.camunda.zeebe.client.ZeebeClient;
-import io.camunda.zeebe.client.api.response.ActivateJobsResponse;
-import io.camunda.zeebe.client.api.response.ActivatedJob;
 import io.camunda.zeebe.client.api.response.DeploymentEvent;
 import io.camunda.zeebe.client.api.response.ProcessInstanceEvent;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.MockitoAnnotations;
 import io.camunda.zeebe.process.test.assertions.BpmnAssert;
-import io.camunda.zeebe.process.test.assertions.ProcessInstanceAssert;
 import io.camunda.zeebe.process.test.extensions.ZeebeProcessTest;
-import io.camunda.zeebe.process.test.testengine.InMemoryEngine;
-import io.camunda.zeebe.process.test.testengine.RecordStreamSource;
 
 //Creates and starts a new in-memory engine for each test case
 @ZeebeProcessTest
 public class ProcessServiceTest {
 
-    // injected by ZeebeProcessTest annotation
-    private InMemoryEngine engine;
-    // injected by ZeebeProcessTest annotation
-    private ZeebeClient client;
-    // injected by ZeebeProcessTest annotation
-    private RecordStreamSource recordStreamSource;
+    // @Mock
+    private ZeebeClient zeebeClient;
 
-    // Embedded the form to the process definition for testing purpose
-    private final String BPMN_PROCESS_FILE = "test-pick-an-animal.bpmn";
+    // @Mock
+    // private ProcessInstanceEvent expectedProcessInstanceEvent;
+
+    private ProcessService processService;
+
+    private final String BPMN_PROCESS_FILE = "pick-an-animal.bpmn";
     private final String BPMN_PROCESS_ID = "animalPickingProcessId";
-    // private final String BPMN_PROCESS_FORM = "decide-an-animal.form";
 
-    @Test
-    public void testDeploymentProcess() {
-        // When
-        DeploymentEvent deploymentEvent = initDeployment();
+    @BeforeEach
+    void setUp() {
+        MockitoAnnotations.openMocks(this);
+        processService = new ProcessService(zeebeClient);
 
-        // Then
-        BpmnAssert.assertThat(deploymentEvent);
+        // The embedded engine is completely reset before each test run.
+        // Therefore, we need to deploy the process each time
+        final DeploymentEvent deploymentEvent = deploymentProcess();
+        BpmnAssert.assertThat(deploymentEvent)
+                .containsProcessesByResourceName(BPMN_PROCESS_FILE);
     }
 
-    private DeploymentEvent initDeployment() {
-        return client.newDeployCommand()
+    @SuppressWarnings("deprecation")
+    private DeploymentEvent deploymentProcess() {
+        return zeebeClient.newDeployCommand()
                 .addResourceFromClasspath(BPMN_PROCESS_FILE)
                 .send()
                 .join();
     }
 
-    private ProcessInstanceAssert initProcessInstanceStart() {
-        ProcessInstanceEvent event = client.newCreateInstanceCommand()
+    @Test
+    public void testProcessInstanceStart() {
+
+        // When
+        // Expect a process event when the process is started
+
+        ProcessInstanceEvent expectedProcessInstanceEvent = zeebeClient.newCreateInstanceCommand()
                 .bpmnProcessId(BPMN_PROCESS_ID)
                 .latestVersion()
                 .send()
                 .join();
-        return BpmnAssert.assertThat(event);
+
+        assertNotNull(expectedProcessInstanceEvent);
+
+        // Test the start process method in the ProcessService
+        ProcessInstanceEvent actualInstanceEvent = processService.startProcess();
+
+        // Verify the interactions and the result
+        assertNotNull(actualInstanceEvent);
+        assertNotNull(actualInstanceEvent.getProcessInstanceKey());
+        assertEquals(expectedProcessInstanceEvent.getBpmnProcessId(), actualInstanceEvent.getBpmnProcessId());
+
     }
 
+    /*
+     * @Test
+     * public void testDeploymentProcess() {
+     * // When
+     * DeploymentEvent deploymentEvent = initDeployment();
+     * 
+     * // Then
+     * BpmnAssert.assertThat(deploymentEvent);
+     * }
+     * 
+     * private DeploymentEvent initDeployment() {
+     * return client.newDeployCommand()
+     * .addResourceFromClasspath(BPMN_PROCESS_FILE)
+     * .send()
+     * .join();
+     * }
+     * 
+     * private ProcessInstanceAssert initProcessInstanceStart() {
+     * ProcessInstanceEvent event = ;
+     * return BpmnAssert.assertThat(event);
+     * }
+     */
 }

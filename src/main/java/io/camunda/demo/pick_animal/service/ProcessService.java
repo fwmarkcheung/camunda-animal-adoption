@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import io.camunda.zeebe.client.ZeebeClient;
+import io.camunda.zeebe.client.api.response.ProcessInstanceEvent;
 import io.camunda.zeebe.spring.client.annotation.Deployment;
 
 @Service
@@ -18,8 +19,12 @@ public class ProcessService {
 
     private static final Logger LOG = LoggerFactory.getLogger(ProcessService.class);
 
+    public ProcessService(ZeebeClient zeebeClient) {
+        this.zeebeClient = zeebeClient;
+    }
+
     // Start a process instance
-    public void startProcess() {
+    public ProcessInstanceEvent startProcess() {
         var bpmnProcessId = "animalPickingProcessId";
         var event = zeebeClient.newCreateInstanceCommand()
                 .bpmnProcessId(bpmnProcessId)
@@ -27,6 +32,7 @@ public class ProcessService {
                 .send()
                 .join();
         LOG.info("started a process instance: {}", event.getProcessInstanceKey());
+        return event;
 
     }
 }
