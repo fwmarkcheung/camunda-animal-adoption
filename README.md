@@ -62,6 +62,27 @@ User can retrieve the pet photo using the ID
 
     docker compose down;docker rmi -f camunda-animal-adoption-web harperdb/harperdb
 
+# Deploy via Helm Chart
+To deploy the app using Helm Chart:
+
+1. Create the Namespace animal-adoption manually using kubectl:
+
+		kubectl create namespace animal-adoption
+
+2. Change directory to the helm chart file directory.
+
+3. Install the helm chart specifying the namespace as argument:
+
+		helm install animal-adoption . --namespace animal-adoption --create-namespace
+
+This command:
+
+- Installs the chart into the animal-adoption namespace.
+- Automatically creates the namespace if it does not exist.
+
+ kubectl get pods --namespace=animal-adoption
+
+
 # Debug tips
     // Return the definitions of all databases and tables within the database.
     curl --location 'http://localhost:9925' \
