@@ -1,0 +1,70 @@
+package io.camunda.demo.pick_animal.service;
+
+import io.camunda.zeebe.client.ZeebeClient;
+import io.camunda.zeebe.client.ZeebeClient.NewCreateInstanceCommandStep1;
+
+import io.camunda.zeebe.client.api.response.ProcessInstanceEvent;
+import io.camunda.zeebe.process.test.extensions.ZeebeProcessTest;
+
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
+import org.mockito.junit.jupiter.MockitoExtension;
+
+import static io.camunda.zeebe.client.ZeebeClient.*;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.mockito.Mockito.*;
+
+import io.camunda.zeebe.client.api.response.
+
+@ZeebeProcessTest
+@ExtendWith(MockitoExtension.class)
+class ProcessServiceTest {
+
+    @Mock
+    private ZeebeClient zeebeClient;
+
+    @Mock
+    private ZeebeClient.NewCreateInstanceCommandStep1 instanceCommandStep1;
+
+    @Mock
+    private ZeebeClient.NewCreateInstanceCommandStep3 instanceCommandStep3;
+
+    @Mock
+    private ProcessInstanceEvent processInstanceEvent;
+
+    @InjectMocks
+    private ProcessService processService;
+
+    private static final String BPMN_PROCESS_ID = "animalPickingProcessId";
+
+    @BeforeEach
+    void setUp() {
+        MockitoAnnotations.openMocks(this);
+    }
+
+    @Test
+    void testStartProcess() {
+        // Mock the behavior of ZeebeClient for process instance creation
+        when(zeebeClient.newCreateInstanceCommand()).thenReturn(instanceCommandStep1);
+        when(instanceCommandStep1.bpmnProcessId(BPMN_PROCESS_ID)).thenReturn(instanceCommandStep3);
+        when(instanceCommandStep3.latestVersion()).thenReturn(instanceCommandStep3);
+        when(instanceCommandStep3.send()).thenReturn(CompletableFuture.completedFuture(processInstanceEvent));
+
+        when(processInstanceEvent.getProcessInstanceKey()).thenReturn(12345L);
+
+        // Call the method under test
+        ProcessInstanceEvent result = processService.startProcess();
+
+        // Verify the interactions and the result
+        verify(zeebeClient).newCreateInstanceCommand();
+        verify(instanceCommandStep1).bpmnProcessId(BPMN_PROCESS_ID);
+        verify(instanceCommandStep3).latestVersion();
+        verify(instanceCommandStep3).send();
+        assertNotNull(result);
+        assertNotNull(result.getProcessInstanceKey());
+    }
+}
