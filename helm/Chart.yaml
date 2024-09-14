@@ -1,5 +1,5 @@
 apiVersion: v2
-name: my-app
-description: A Helm chart for deploying web and database services
+name: animal-adoption-app
+description: A Helm chart for deploying the animal adoption app which contains a springboot app and a DB
 version: 0.1.0
 appVersion: "1.0"
