@@ -5,20 +5,20 @@ database:
   password: password
   httpThreads: 4
   ports:
-    adminLocalPort: 9925
-    adminDockerPort: 9925
-    userLocalPort: 9926
-    userDockerPort: 9926
+    adminLocalPort: 9926
+    adminDockerPort: 9926
+    userLocalPort: 9925
+    userDockerPort: 9925
 
 web:
   image:
-    repository: my-web-app
+    repository: animal-adoption-app
     tag: latest
   ports:
     localPort: 8080
     dockerPort: 8080
   environment:
     harperDB:
-      uri: "http://database:9926"
+      uri: "http://database:9925"
       username: root
       password: password
