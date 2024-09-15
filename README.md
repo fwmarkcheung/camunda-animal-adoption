@@ -67,7 +67,7 @@ The docker engine will run the web app and database as containers.
 
 The database will be deployed first and the web application will ping the database to make sure it is healthy before it starts.
 
-**Optimization implemented**
+**Docker build optimization**
 
 The Dockerfile is optimized to only update the required docker image layer if the image is rebuilt due to code/configuration changes.
 

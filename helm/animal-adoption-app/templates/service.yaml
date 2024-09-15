@@ -7,10 +7,10 @@ spec:
   ports:
     - name: admin
       port: {{ .Values.database.ports.adminDockerPort }}
-      targetPort: {{ .Values.database.ports.adminDockerPort }}
+      targetPort: {{ .Values.database.ports.adminLocalPort }}
     - name: user
       port: {{ .Values.database.ports.userDockerPort }}
-      targetPort: {{ .Values.database.ports.userDockerPort }}
+      targetPort: {{ .Values.database.ports.userLocalPort }}
   selector:
     app: {{ .Release.Name }}-database
 
@@ -23,7 +23,7 @@ spec:
   type: ClusterIP
   ports:
     - name: http
-      port: {{ .Values.web.ports.dockerPort }}
-      targetPort: {{ .Values.web.ports.dockerPort }}
+      port: {{ .Values.web.service.port }}     # The service port exposed outside the pod
+      targetPort: {{ .Values.web.ports.dockerPort }}   # The container's internal port (from values.yaml)
   selector:
     app: {{ .Release.Name }}-web
