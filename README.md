@@ -78,7 +78,10 @@ The Dockerfile is optimized to only update the required docker image layer if th
 
 # Deploy via Helm Chart
 
-**Prerequisite**
+## Prerequisites
+
+### SpringBoot app Docker image setupSpringBoot app Docker image setup
+
 It is assumed the springboot web app image was published to the Docker hub as:
 
 	<userId>/camunda-animal-adoption-app:latest
@@ -113,7 +116,21 @@ Otherwise, follow the steps below to push the images to your own Docker Hub
     			repository: <userid>/camunda-animal-adoption-app
     			tag: latest
 
-**To deploy the app using Helm Chart:**
+### Setup an ingress controller
+To expose the application beyond the K8s cluster:  
+
+- Your Kubernetes cluster must have an Ingress Controller (e.g., NGINX Ingress Controller) installed.
+- You need a DNS record (or IP) that points to the Ingress controller's external IP address.
+
+Run the following commands to install nginx as an Ingress controller:
+```bash
+helm repo add ingress-nginx https://kubernetes.github.io/ingress-nginx
+helm repo update
+helm install nginx-ingress ingress-nginx/ingress-nginx --namespace ingress-nginx --create-namespace
+```
+    
+
+### Deploy the app using Helm Chart
 
 1. Optionally, create the namespace *animal-adoption*.  For example, using kubectl:
 
