@@ -1,43 +1,18 @@
-# Highlevel Architecture
+# Overview
+This application is a simple Camunda Client App for Camunda 8, that gets a random picture of a cat, a dog, or a bear.
 
-**This application is composed of the following components:**
+During bootstrap, it deploys a process definition to a Camunda cluster and starts a process instance to pick an animal.
 
+A user can then assign the task to him/herself to pick a cat, a dog, or a bear via a form presented by Camunda.
 
-1. The Camunda process enginee (**Zeebe**) which drives the workflow for the pet adoption process by interacting with the various components.  A BPMN process is deployed and run in a Camunda cluster. It provides a form for a user to select a pet to adopt and defines a workflow for the pet adoption process.
-2. A Springboot Web application which provides API calls to retrieve the information about the adoption process. For example, the photo of the pet being adopted and query about the adoption meta data.
-3. A HarperDB which is a NO-SQL DB to store the adoption data.
-4. A third party microservice to provide a photo of the pet.
+Once an animal is selected, the application will pick a random picture of the animal by calling a third party system throuhg an API rest call.
 
-The Web app and the DB were packaged using docker-compose and run as containers in the docker desktop.
-
-See the diagram ![Pet Adoption App Highlevel Architecture](camundaPetAdoptionApp.pdf)
-
-# Run Test cases
-**To run test cases, execute the following command:**
-
-    mvn clean verify
-
-# Using Docker Compose to run the application
-
-**To deploy and start the containers in a docker engine**
-
-1. Ensure the Camunda cluster is created and running healthy
-2. Start Docker Desktop
-3. Execute the docker-compose command below:
-
-    	docker-compose up -d
-
-The docker engine will run the web app and database as containers.
-
-During the bootstrap, the web application will perform the followings:
-1. Deploy the process model [pick-an-animal.bpmn](src/main/resources/pick-an-animal.bpmn)  to a Camunda cluster specified by the connection properties in the [application.properties] (src/main/resources/application.properties)
-2. Start a process instance automatically and print out process id in the app console.
-
-A user can then assign the process to him/herself and select a pet to adopt.  The application will make an API call to get a random photo of the pet selected and store the selection as a record to the DB.
+The application then store the photo as a record to a database.
 
 The record id is returned to the process as shown in attached [screenshot]: (screenShotShowingUserRecord.jpg)
 
-User can retrieve the pet photo using the ID
+User can retrieve the pet photo or the record details using the following API calls:
+
 
 **To retrieve the photo of the pet adopted, use the following API call:**
     
@@ -58,11 +33,50 @@ User can retrieve the pet photo using the ID
     http://localhost:8080/userchoice/Mark-2024-09-06-18-59-16-0400
 
 
+# Highlevel Architecture
+**This application is composed of the following components:**
+
+1. A **Springboot Web application** which provides API calls to retrieve the information about the adoption process. For example, the photo of the pet being adopted and query about the adoption meta data.
+2. A **HarperDB** which is a NO-SQL DB to store the adoption data.
+
+It interacts with the following external systems:
+
+1. A Camunda process engine (**Zeebe**).  It drives the workflow for the pet adoption process by interacting with the various components.  A BPMN process is deployed and run in a Camunda cluster. It provides a form for a user to select a pet to adopt and defines a workflow for the pet adoption process.
+2. **A third party microservice** to provide a photo of the pet selected.
+
+See the diagram ![Pet Adoption App Highlevel Architecture](camundaPetAdoptionApp.pdf)
+
+During the bootstrap, the web application will perform the followings:
+1. Deploy the process model [pick-an-animal.bpmn](src/main/resources/pick-an-animal.bpmn)  to a Camunda cluster specified by the connection properties in the [application.properties] (src/main/resources/application.properties)
+2. Start a process instance and print the process id in the app console.
+
+The application can be deployed either by docker-compose or Helm Chart to a K8s cluster.
+
+# Deploy using Docker Compose
+
+**To deploy and start the containers in a docker engine**
+
+1. Ensure the Camunda cluster is created and running healthy.
+2. Start Docker Desktop.
+3. Change directory to where the docker-compose.yml is stored.
+4. Execute the docker-compose command below:
+
+    	docker-compose up -d
+
+The docker engine will run the web app and database as containers.  
+
+The database will be deployed first and the web application will ping the database to make sure it is healthy before it starts.
+
+**Optimization implemented**
+
+The Dockerfile is optimized to only update the required docker image layer if the image is rebuilt due to code/configuration changes.
+
+
 **To shutdown the containers and cleanup images, execute the following commands:**
 
     docker compose down;docker rmi -f camunda-animal-adoption-web harperdb/harperdb
 
-# # Deploy via Helm Chart
+# Deploy via Helm Chart
 
 **Prerequisite**
 It is assumed the springboot web app image was published to the Docker hub as:
@@ -90,18 +104,18 @@ Otherwise, follow the steps below to push the images to your own Docker Hub
 
 5. Push the image to Docker hub:
 
-		$ docker push fwmarkcheung/camunda-animal-adoption-app:latest
+		$ docker push <userid>/camunda-animal-adoption-app:latest
 
 6. Update the* image* section in the* values.yaml *as follow: 
 
    	 web:
     		image:
-    			repository: fwmarkcheung/camunda-animal-adoption-app
+    			repository: <userid>/camunda-animal-adoption-app
     			tag: latest
-	
-## To deploy the app using Helm Chart:
 
-1. Create the Namespace animal-adoption manually using kubectl:
+**To deploy the app using Helm Chart:**
+
+1. Optionally, create the namespace *animal-adoption*.  For example, using kubectl:
 
 		kubectl create namespace animal-adoption
 
@@ -116,7 +130,7 @@ This command:
 - Installs the chart into the animal-adoption namespace.
 - Automatically creates the namespace if it does not exist.
 
-To get the running pods:
+**To get the running pods:**
 
         
 		$ kubectl get pods --namespace=animal-adoption
@@ -131,7 +145,7 @@ To get the running pods:
 
 ## To clean up
 
-To remove the Helm chart:
+Remove the Helm chart:
 
     helm uninstall animal-adoption-app --namespace animal-adoption
 
@@ -139,7 +153,12 @@ Delete all resources created by the Helm chart including the  namespace itself
 
     	kubectl delete namespace animal-adoption
 
-# Debug tips
+# Run Test cases
+**To run test cases, execute the following command where the *pom.xml* is stored:**
+
+    mvn clean verify
+
+# Debug Tips
     // Return the definitions of all databases and tables within the database.
     curl --location 'http://localhost:9925' \
     --header 'Authorization: Basic cm9vdDpwYXNzd29yZA==' \
