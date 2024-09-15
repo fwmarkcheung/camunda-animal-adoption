@@ -12,7 +12,7 @@ database:
 
 web:
   image:
-    repository: animal-adoption-app
+    repository: fwmarkcheung/camunda-animal-adoption-app
     tag: latest
   ports:
     localPort: 8080

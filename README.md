@@ -62,8 +62,44 @@ User can retrieve the pet photo using the ID
 
     docker compose down;docker rmi -f camunda-animal-adoption-web harperdb/harperdb
 
-# Deploy via Helm Chart
-To deploy the app using Helm Chart:
+# # Deploy via Helm Chart
+
+**Prerequisite**
+It is assumed the springboot web app image was published to the Docker hub as:
+
+	<userId>/camunda-animal-adoption-app:latest
+
+In my case, the web image was published as:
+
+	fwmarkcheung/camunda-animal-adoption-app:latest
+
+Otherwise, follow the steps below to push the images to your own Docker Hub
+
+1. Login to Docker Hub
+2. Create a public repository
+3. After you ran the docker compose, a web application will be built as a local image.  To check the image name, execute the command:
+
+		$ docker images | grep cam
+		
+		Output:
+		
+		camunda-animal-adoption-web               latest                                                                        39e9f84ffc1f   9 hours ago     387MB
+4. Tag the local image by executing the command:
+
+		$ docker tag camunda-animal-adoption-web:latest <userid>camunda-animal-adoption-app:latest
+
+5. Push the image to Docker hub:
+
+		$ docker push fwmarkcheung/camunda-animal-adoption-app:latest
+
+6. Update the* image* section in the* values.yaml *as follow: 
+
+   	 web:
+    		image:
+    			repository: fwmarkcheung/camunda-animal-adoption-app
+    			tag: latest
+	
+## To deploy the app using Helm Chart:
 
 1. Create the Namespace animal-adoption manually using kubectl:
 
@@ -73,15 +109,35 @@ To deploy the app using Helm Chart:
 
 3. Install the helm chart specifying the namespace as argument:
 
-		helm install animal-adoption . --namespace animal-adoption --create-namespace
+		helm install animal-adoption-app . --namespace animal-adoption --create-namespace
 
 This command:
 
 - Installs the chart into the animal-adoption namespace.
 - Automatically creates the namespace if it does not exist.
 
- kubectl get pods --namespace=animal-adoption
+To get the running pods:
 
+        
+		$ kubectl get pods --namespace=animal-adoption
+		
+		Output
+		
+		NAME                                           READY   STATUS    RESTARTS   AGE
+		animal-adoption-app-database-78cdd8bc5-wv82c   1/1     Running   0          9s
+		animal-adoption-app-web-6d5cbf865-gvw84        1/1     Running   0          9s
+
+
+
+## To clean up
+
+To remove the Helm chart:
+
+    helm uninstall animal-adoption-app --namespace animal-adoption
+
+Delete all resources created by the Helm chart including the  namespace itself
+
+    	kubectl delete namespace animal-adoption
 
 # Debug tips
     // Return the definitions of all databases and tables within the database.
