@@ -22,8 +22,15 @@ web:
   service:
     port: 8080
   environment:
+    # Zee cluster connection properties where the process will be deployed and executed
+    # Follow the instruction from https://docs.camunda.io/docs/guides/orchestrate-microservices/#create-credentials-for-your-zeebe-client
+    # to configure the Zee client credentials below
     SPRING_APPLICATION_JSON: |
       {
+          "zeebe.client.cloud.region": "ont-1",
+          "zeebe.client.cloud.clusterId": "19ff0ed5-9a70-4964-af49-776c430d99cf",
+          "zeebe.client.cloud.clientId": "qoIq8J4quSXmNHW3kSiaISyQSjvuD-Hq",
+          "zeebe.client.cloud.clientSecret": "yJfQ4YL.snoUfSKSccvWbGRo01i5kKriz1auNhj8j~F19l8vWbXDUo88oXI.lmxH",
           "harperDB.uri": "http://${ANIMAL_ADOPTION_APP_DATABASE_SERVICE_HOST}:${ANIMAL_ADOPTION_APP_DATABASE_SERVICE_PORT_USER}",
           "harperDB.username": "root",
           "harperDB.password": "password"
