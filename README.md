@@ -137,12 +137,6 @@ Verify nginx is running healthy using the following command:
 	NAME                                                      READY   STATUS    RESTARTS      AGE
 	nginx-ingress-ingress-nginx-controller-xxx   1/1     Running   1 (92m ago)   5h25m
 
-The application is exposed out of the K8s cluster using an ingress.  If you run application locally and use a ClusterIP service, you can temporarily port-forward to access the app:
-
-	kubectl port-forward svc/animal-adoption-app-web 8080:8080 --namespace animal-adoption
-
-Then access the app via http://localhost:8080
-
 ### Deploy the app using Helm Chart
 
 1. Optionally, create the namespace *animal-adoption*.  For example, using kubectl:
@@ -160,6 +154,7 @@ This command:
 - Installs the chart into the animal-adoption namespace.
 - Automatically creates the namespace if it does not exist.
 
+
 **To get the running pods:**
 
         
@@ -171,6 +166,13 @@ This command:
 		animal-adoption-app-database-xxx   1/1     Running   0          9s
 		animal-adoption-app-web-xxx        1/1     Running   0          9s
 
+**To access the application**
+
+The application is exposed out of the K8s cluster using an ingress.  If you run application locally and use a ClusterIP service, you can temporarily port-forward to access the app:
+
+	kubectl port-forward svc/animal-adoption-app-web 8080:8080 --namespace animal-adoption
+
+Then access the app via http://localhost:8080
 
 **Debugging Tips**
 To switch to the namespace
