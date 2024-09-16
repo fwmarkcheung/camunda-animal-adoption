@@ -46,9 +46,9 @@ spec:
           image: {{ .Values.web.image.repository }}:{{ .Values.web.image.tag }}
           ports:
             - containerPort: {{ .Values.web.ports.dockerPort }}
-          env:
-            - name: SPRING_APPLICATION_JSON
-              value: '{{ .Values.web.environment.SPRING_APPLICATION_JSON }}'
+          # env:
+          #   - name: SPRING_APPLICATION_JSON
+          #     value: '{{ .Values.web.environment.harperDB | toJson }}'
           # command:
           #   # Only deploy the web container if DB is healthy
           #   - /bin/bash

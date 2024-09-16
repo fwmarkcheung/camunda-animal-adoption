@@ -76,7 +76,7 @@ The Dockerfile is optimized to only update the required docker image layer if th
 
     docker compose down;docker rmi -f camunda-animal-adoption-web harperdb/harperdb
 
-# Deploy via Helm Chart
+# Deploy using Helm Chart
 
 ## Prerequisites
 
@@ -103,7 +103,7 @@ Otherwise, follow the steps below to push the images to your own Docker Hub
 		camunda-animal-adoption-web               latest                                                                        39e9f84ffc1f   9 hours ago     387MB
 4. Tag the local image by executing the command:
 
-		$ docker tag camunda-animal-adoption-web:latest <userid>camunda-animal-adoption-app:latest
+		$ docker tag camunda-animal-adoption-web:latest <userid>/camunda-animal-adoption-app:latest
 
 5. Push the image to Docker hub:
 
@@ -128,6 +128,24 @@ helm repo add ingress-nginx https://kubernetes.github.io/ingress-nginx
 helm repo update
 helm install nginx-ingress ingress-nginx/ingress-nginx --namespace ingress-nginx --create-namespace
 ```
+
+Verify nginx is running healthy using the following command:
+
+    $ kubectl get pods --namespace ingress-nginx
+	
+	Expected Output
+	
+	NAME                                                      READY   STATUS    RESTARTS      AGE
+	nginx-ingress-ingress-nginx-controller-xxx   1/1     Running   1 (92m ago)   5h25m
+
+	
+	
+	
+	
+	
+	
+
+
     
 
 ### Deploy the app using Helm Chart
@@ -152,12 +170,25 @@ This command:
         
 		$ kubectl get pods --namespace=animal-adoption
 		
-		Output
+		Expected Output
 		
 		NAME                                           READY   STATUS    RESTARTS   AGE
-		animal-adoption-app-database-78cdd8bc5-wv82c   1/1     Running   0          9s
-		animal-adoption-app-web-6d5cbf865-gvw84        1/1     Running   0          9s
+		animal-adoption-app-database-xxx   1/1     Running   0          9s
+		animal-adoption-app-web-xxx        1/1     Running   0          9s
 
+**Debugging Tips**
+
+kubectl port-forward svc/animal-adoption-app-web 8080:8080 --namespace animal-adoption
+
+kubectl get svc --namespace animal-adoption
+
+kubectl get pods --namespace animal-adoption
+
+kubectl logs pod/animal-adoption-app-web-8c4f748d9-9nxmc
+
+kubectl get events --namespace animal-adoption
+
+kubectl logs pod/animal-adoption-app-web-8c4f748d9-9nxmc  --namespace animal-adoption
 
 
 ## To clean up

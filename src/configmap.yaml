@@ -1,0 +1,11 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ .Release.Name }}-web-config
+data:
+  application.json: |
+    {
+      "harperDB.uri": "http://{{ .Release.Name }}-database:{{ .Values.database.ports.userDockerPort }}",
+      "harperDB.username": "{{ .Values.web.environment.harperDB.username }}",
+      "harperDB.password": "{{ .Values.web.environment.harperDB.password }}"
+    }
