@@ -89,7 +89,7 @@ In my case, the web image was published as:
 
 	fwmarkcheung/camunda-animal-adoption-app:latest
 
-Otherwise, follow the steps below to push the images to your own Docker Hub
+Otherwise, follow the steps below to push the image to your own Docker Hub
 
 1. Login to Docker Hub
 2. Create a public repository
@@ -137,15 +137,11 @@ Verify nginx is running healthy using the following command:
 	NAME                                                      READY   STATUS    RESTARTS      AGE
 	nginx-ingress-ingress-nginx-controller-xxx   1/1     Running   1 (92m ago)   5h25m
 
-	
-	
-	
-	
-	
-	
+The application is exposed out of the K8s cluster using an ingress.  If you run application locally and use a ClusterIP service, you can temporarily port-forward to access the app:
 
+	kubectl port-forward svc/animal-adoption-app-web 8080:8080 --namespace animal-adoption
 
-    
+Then access the app via http://localhost:8080
 
 ### Deploy the app using Helm Chart
 
@@ -175,11 +171,6 @@ This command:
 		animal-adoption-app-database-xxx   1/1     Running   0          9s
 		animal-adoption-app-web-xxx        1/1     Running   0          9s
 
-The application is exposed out of the K8s cluster using an ingress.  If you run application locally and use a ClusterIP service, you can temporarily port-forward to access the app:
-
-	kubectl port-forward svc/animal-adoption-app-web 8080:8080 --namespace animal-adoption
-
-Then access the app via http://localhost:8080
 
 **Debugging Tips**
 To switch to the namespace
