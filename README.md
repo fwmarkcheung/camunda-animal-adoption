@@ -7,7 +7,7 @@ A user can then assign the task to him/herself to pick a cat, a dog, or a bear v
 
 Once an animal is selected, the application will pick a random picture of the animal by calling a third party system throuhg an API rest call.
 
-The application then store the photo as a record to a database.
+The application then stores the photo as a record to a database.
 
 The record id is returned to the process as shown in attached [screenshot]: (screenShotShowingUserRecord.jpg)
 
@@ -69,7 +69,7 @@ The database will be deployed first and the web application will ping the databa
 
 **Docker build optimization**
 
-The Dockerfile is optimized to only update the required docker image layer if the image is rebuilt due to code/configuration changes.
+The Dockerfile is optimized to only update the required docker image layer if the application image needs to be rebuilt due to code/configuration changes.
 
 
 **To shutdown the containers and cleanup images, execute the following commands:**
@@ -80,8 +80,7 @@ The Dockerfile is optimized to only update the required docker image layer if th
 
 ## Prerequisites
 
-### SpringBoot app Docker image setupSpringBoot app Docker image setup
-
+### SpringBoot app Docker image setup
 It is assumed the springboot web app image was published to the Docker hub as:
 
 	<userId>/camunda-animal-adoption-app:latest
@@ -176,19 +175,32 @@ This command:
 		animal-adoption-app-database-xxx   1/1     Running   0          9s
 		animal-adoption-app-web-xxx        1/1     Running   0          9s
 
+The application is exposed out of the K8s cluster using an ingress.  If you run application locally and use a ClusterIP service, you can temporarily port-forward to access the app:
+
+	kubectl port-forward svc/animal-adoption-app-web 8080:8080 --namespace animal-adoption
+
+Then access the app via http://localhost:8080
+
 **Debugging Tips**
+To switch to the namespace
 
-kubectl port-forward svc/animal-adoption-app-web 8080:8080 --namespace animal-adoption
+	kubectl config set-context --current --namespace=animal-adoption
 
-kubectl get svc --namespace animal-adoption
+To get the service
 
-kubectl get pods --namespace animal-adoption
+	kubectl get svc
 
-kubectl logs pod/animal-adoption-app-web-8c4f748d9-9nxmc
+To get all the pods in the namespace
 
-kubectl get events --namespace animal-adoption
+	kubectl get pods
 
-kubectl logs pod/animal-adoption-app-web-8c4f748d9-9nxmc  --namespace animal-adoption
+To get the application console log
+
+	kubectl logs pod/animal-adoption-app-web-xxx
+
+To get all the events
+
+	kubectl get events
 
 
 ## To clean up
@@ -206,7 +218,7 @@ Delete all resources created by the Helm chart including the  namespace itself
 
     mvn clean verify
 
-# Debug Tips
+# Database Debug Tips
     // Return the definitions of all databases and tables within the database.
     curl --location 'http://localhost:9925' \
     --header 'Authorization: Basic cm9vdDpwYXNzd29yZA==' \
