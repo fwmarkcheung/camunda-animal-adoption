@@ -47,7 +47,7 @@ It interacts with the following external systems:
 See the diagram ![Pet Adoption App Highlevel Architecture](camundaPetAdoptionApp.pdf)
 
 During the bootstrap, the web application will perform the followings:
-1. Deploy the process model [pick-an-animal.bpmn](src/main/resources/pick-an-animal.bpmn)  to a Camunda cluster specified by the connection properties in the [application.properties] (src/main/resources/application.properties)
+1. Deploy the process model [pick-an-animal.bpmn](src/main/resources/pick-an-animal.bpmn)  to a Camunda cluster specified by the connection properties in the [application.properties](src/main/resources/application.properties).  These conection properties can be overriden as environment variables in either the [docker-compose.yaml](docker-compose.yaml) or [helm/animal-adoption-app/values.yaml](helm/animal-adoption-app)
 2. Start a process instance and print the process id in the app console.
 
 The application can be deployed either by docker-compose or Helm Chart to a K8s cluster.
@@ -69,7 +69,7 @@ The database will be deployed first and the web application will ping the databa
 
 **Docker build optimization**
 
-The Dockerfile is optimized to only update the required docker image layer if the application image needs to be rebuilt due to code/configuration changes.
+The Dockerfile is optimized to only update the required docker image layers if the application source is changed and rebuilt due to code/configuration changes.
 
 
 **To shutdown the containers and cleanup images, execute the following commands:**
